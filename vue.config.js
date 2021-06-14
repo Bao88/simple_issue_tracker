@@ -14,7 +14,7 @@ module.exports = {
       errors: true,
     },
     proxy: {
-      "/api/issues": {
+      "/api": {
         target: `${host}:${port}`,
         changeOrigin: true,
       },

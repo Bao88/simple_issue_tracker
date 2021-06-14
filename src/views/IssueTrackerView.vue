@@ -6,13 +6,26 @@
       :key="'issue column' + columnIndex"
     >
       <div
-        v-for="(issue, issueIndex) in issues"
+        v-for="(issue, issueIndex) in getIssuesWithState(columnIndex - 1)"
         :key="`column-${columnIndex}-issue-${issueIndex}`"
         class="issue"
       >
+        <!-- Add the issue if it is in the correct column -->
         <div>{{ issue.title }}</div>
         <div>{{ issue.description }}</div>
-        <div>{{ issue.state }}</div>
+        <select
+          name="state"
+          id="state"
+          @change="updateIssueState(issue.id, $event)"
+        >
+          <option value="open" :selected="'open' == issue.state">open</option>
+          <option value="pending" :selected="'pending' == issue.state">
+            pending
+          </option>
+          <option value="closed" :selected="'closed' == issue.state">
+            closed
+          </option>
+        </select>
       </div>
     </div>
   </div>
@@ -38,6 +51,25 @@ export default {
       console.log(error);
     };
 
+    const getIssue = (id) => {
+      return issues.value.find((issue) => issue.id == id);
+    };
+
+    const canChangeState = (originalState, newState) => {
+      //Edge case if originalState == newState, it means we dont need to update state.
+      if (originalState == newState) return true;
+      /*
+    if (originalState == "open") return true;
+    else if (originalState == "pending" && newState == "closed") return true;
+    else return false;
+
+    or */
+
+      return (
+        originalState == "open" ||
+        (originalState == "pending" && newState == "closed")
+      );
+    };
     // Fetch issues from server
     const fetchIssues = () => {
       fetch(`${server}issues`, {
@@ -52,13 +84,62 @@ export default {
         })
         .catch(printError);
     };
-    const createIssue = () => {};
-    const updateIssue = () => {};
+    const createIssue = () => {
+      fetch(`${server}issue`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+        })
+        .catch(printError);
+    };
+
+    const updateIssueState = (issueId, event) => {
+      const state = event.target.value;
+      const issue = getIssue(issueId);
+
+      // If issue exists
+      if (issue) {
+        // Test if the state can be changed
+        if (canChangeState(issue.state, state)) {
+          // Modify the issue before sending
+          issue.state = state;
+
+          fetch(`${server}issue`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(issue),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+            })
+            .catch(printError);
+        } else {
+          // Reset the selected value
+          event.target.value = issue.state;
+        }
+      } else {
+        console.log("Issue not found");
+      }
+    };
 
     // Helper functions for template
-    const getIssuesOfState = (state) => {
-      states;
-      return state;
+    const isSameState = (columnIndex, issueState) => {
+      const columnState = states[columnIndex];
+      return columnState == issueState;
+    };
+
+    const getIssuesWithState = (columnIndex) => {
+      return issues.value.filter((issue) =>
+        isSameState(columnIndex, issue.state)
+      );
     };
 
     // Fetch isses when mounted
@@ -74,8 +155,9 @@ export default {
 
       // Methods
       createIssue,
-      updateIssue,
-      getIssuesOfState,
+      updateIssueState,
+      isSameState,
+      getIssuesWithState,
     };
   },
 };
@@ -85,7 +167,7 @@ export default {
 .issue-tracker-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 0px 0px;
+  gap: 5px 5px;
   grid-auto-flow: row;
 }
 
@@ -105,6 +187,6 @@ export default {
   flex-basis: auto;
   align-self: auto;
   order: 0;
-  border: 1px solid;
+  border: 2px solid;
 }
 </style>

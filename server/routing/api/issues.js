@@ -8,9 +8,9 @@ let id = 0; //
 class Issue {
   constructor(issue) {
     this.id = id++;
-    this.title = issue.title;
-    this.description = issue.description;
-    this.state = issue.state;
+    this.title = issue.title || "";
+    this.description = issue.description || "";
+    this.state = issue.state || "open";
   }
 }
 
@@ -25,7 +25,7 @@ const issue1 = new Issue({
 
 const issue2 = new Issue({
   title: "Create Server",
-  description: "Implmenet the routes",
+  description: "Implement the routes",
   state: "pending",
 });
 
@@ -42,24 +42,27 @@ router.get("/issues", (request, response) => {
 
 // Post issue
 router.post("/issue", (request, response) => {
-  const body = request.body;
-  console.log(body);
-
+  // create an empty issue
+  const issue = new Issue();
+  issues.set(issue.id, issue);
   /*
     Test if body is a valid issue
     Newly created issues should always have state as 'open" ?
     if valid create an Issue with new Issue (request.body) and use "set"
     else send back error(invalid data 422 or 400).
   */
-  response.send(body);
+  response.send(issue);
 });
 
 // Put/Update an issue
 router.put("/issue", (request, response) => {
   const body = request.body;
-  console.log(body);
+
+  // Update the issue
+  issues.set(body.id, body);
 
   /*
+  We can also test on the backend
     Test if body is a valid issue
     States can change from.
     - Open -> Pending | Closed.
