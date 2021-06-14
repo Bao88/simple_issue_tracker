@@ -3,6 +3,7 @@
     <button class="create-issue-button" @click="createIssue">
       Create issue
     </button>
+
     <div
       v-for="columnIndex in 3"
       class="flex-container border"
@@ -13,13 +14,21 @@
         :key="`column-${columnIndex}-issue-${issueIndex}`"
         class="issue"
       >
-        <!-- Add the issue if it is in the correct column -->
-        <div>{{ issue.title }}</div>
-        <div>{{ issue.description }}</div>
+        <!-- Add the issue if it is in the correct column and create unique id for each issue -->
+        <label :for="`issue-title-${columnIndex}-${issueIndex}`">Title: </label>
+        <input
+          :id="`issue-title${columnIndex}-${issueIndex}`"
+          type="text"
+          class="full-width"
+          v-model="issue.title"
+          @blur="updateIssue(issue)"
+        />
+
+        <label :for="`issue-state-${columnIndex}-${issueIndex}`">State: </label>
         <select
           name="state"
-          id="state"
-          @change="updateIssueState(issue.id, $event)"
+          :id="`issue-state-${columnIndex}-${issueIndex}`"
+          @change="updateIssueState(issue, $event)"
         >
           <option value="open" :selected="'open' == issue.state">open</option>
           <option value="pending" :selected="'pending' == issue.state">
@@ -29,13 +38,25 @@
             closed
           </option>
         </select>
+
+        <label
+          class="full-width"
+          :for="`issue-description-${columnIndex}-${issueIndex}`"
+          >Description:
+        </label>
+        <textarea
+          :id="`issue-description-${columnIndex}-${issueIndex}`"
+          type="text"
+          v-model="issue.description"
+          @blur="updateIssue(issue)"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, computed, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 
 // constants
 const server = "http://localhost:8080/api/";
@@ -47,15 +68,9 @@ export default {
   setup() {
     const issues = ref([]);
 
-    const b = computed(() => 1 + 2);
-
     // Methods
     const printError = (error) => {
       console.log(error);
-    };
-
-    const getIssue = (id) => {
-      return issues.value.find((issue) => issue.id == id);
     };
 
     const canChangeState = (originalState, newState) => {
@@ -103,35 +118,31 @@ export default {
         .catch(printError);
     };
 
-    const updateIssueState = (issueId, event) => {
+    const updateIssue = (issue) => {
+      fetch(`${server}issue`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(issue),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+        })
+        .catch(printError);
+    };
+
+    const updateIssueState = (issue, event) => {
       const state = event.target.value;
-      const issue = getIssue(issueId);
-
-      // If issue exists
-      if (issue) {
-        // Test if the state can be changed
-        if (canChangeState(issue.state, state)) {
-          // Modify the issue before sending
-          issue.state = state;
-
-          fetch(`${server}issue`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(issue),
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              console.log(data);
-            })
-            .catch(printError);
-        } else {
-          // Reset the selected value
-          event.target.value = issue.state;
-        }
+      // Test if the state can be changed
+      if (canChangeState(issue.state, state)) {
+        // Modify the issue before sending
+        issue.state = state;
+        updateIssue(issue);
       } else {
-        console.log("Issue not found");
+        // Reset the selected value
+        event.target.value = issue.state;
       }
     };
 
@@ -155,13 +166,10 @@ export default {
     return {
       // ref
       issues,
-      // Computed
-      b,
-
       // Methods
       createIssue,
       updateIssueState,
-      isSameState,
+      updateIssue,
       getIssuesWithState,
     };
   },
@@ -179,20 +187,17 @@ export default {
 .flex-container {
   display: flex;
   flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: normal;
-  align-items: stretch;
-  align-content: stretch;
 }
 
 .issue {
-  display: block;
-  flex-grow: 0;
-  flex-shrink: 1;
-  flex-basis: auto;
-  align-self: auto;
-  order: 0;
+  display: flex;
+  flex-wrap: wrap;
   border: 2px solid;
+  justify-content: space-between;
+}
+
+.full-width {
+  width: 100%;
 }
 
 .create-issue-button {
@@ -201,5 +206,12 @@ export default {
   top: 20px;
   left: 50%;
   margin-left: -50px;
+}
+
+/* Styling for issue's children */
+textarea {
+  height: 100px;
+  width: 100%;
+  resize: vertical;
 }
 </style>

@@ -41,6 +41,7 @@ body {
 
 .view {
   grid-area: 2 / 2 / 3 / 3;
+  overflow-y: auto;
 }
 
 .border {
