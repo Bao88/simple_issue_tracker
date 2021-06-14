@@ -9,6 +9,8 @@ const path = require("path");
 
 // Send the whole build folder to the user or anyone connected to the server
 app.use(express.static(path.join(__dirname, "../dist")));
+
+// middleware to populate request.body, parsing application/json
 app.use(express.json({ limit: '1mb', extended: true }))
 
 // API Routes

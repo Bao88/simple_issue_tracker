@@ -1,16 +1,23 @@
 <template>
   <div class="issue-tracker-grid">
-    <button class="create-issue-button" @click="createIssue">
+    <button
+      id="create-issue-button"
+      class="create-issue-button"
+      @click="createIssue"
+    >
       Create issue
     </button>
 
     <div
+      id="issue-tracker-grid"
       v-for="columnIndex in 3"
       class="flex-container border"
       :key="'issue column' + columnIndex"
     >
+      <div class="grid-column-header">{{ states[columnIndex - 1] }}</div>
       <div
         v-for="(issue, issueIndex) in getIssuesWithState(columnIndex - 1)"
+        :id="'column-' + columnIndex"
         :key="`column-${columnIndex}-issue-${issueIndex}`"
         class="issue"
       >
@@ -59,7 +66,7 @@
 import { ref, onMounted } from "vue";
 
 // constants
-const server = "http://localhost:8080/api/";
+const server = process.env.VUE_APP_SERVER;
 const states = ["open", "pending", "closed"];
 
 export default {
@@ -73,21 +80,20 @@ export default {
       console.log(error);
     };
 
+    // Check if the state of an issue can be changed.
+    // Open can be changed to either Pending or Closed
+    // Pending can be changed to Closed but not to Open
+    // Closed can't change state.
     const canChangeState = (originalState, newState) => {
       //Edge case if originalState == newState, it means we dont need to update state.
       if (originalState == newState) return true;
-      /*
-    if (originalState == "open") return true;
-    else if (originalState == "pending" && newState == "closed") return true;
-    else return false;
-
-    or */
 
       return (
         originalState == "open" ||
         (originalState == "pending" && newState == "closed")
       );
     };
+
     // Fetch issues from server
     const fetchIssues = () => {
       fetch(`${server}issues`, {
@@ -103,6 +109,7 @@ export default {
         .catch(printError);
     };
 
+    // Create a new issue
     const createIssue = () => {
       fetch(`${server}issue`, {
         method: "POST",
@@ -118,6 +125,7 @@ export default {
         .catch(printError);
     };
 
+    // Update an issue
     const updateIssue = (issue) => {
       fetch(`${server}issue`, {
         method: "PUT",
@@ -164,6 +172,8 @@ export default {
     });
 
     return {
+      //constants
+      states,
       // ref
       issues,
       // Methods
@@ -180,7 +190,7 @@ export default {
 .issue-tracker-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 5px 5px;
+  gap: 10px 10px;
   grid-auto-flow: row;
 }
 
@@ -189,10 +199,19 @@ export default {
   flex-direction: column;
 }
 
+.grid-column-header {
+  display: flex;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
 .issue {
   display: flex;
   flex-wrap: wrap;
   border: 2px solid;
+  margin: 2px 0 2px 0;
   justify-content: space-between;
 }
 

@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "lint": "vue-cli-service lint",
-    "build:app": "vue-cli-service build",
-    "serve:app": "vue-cli-service serve",
+    "build:app": "export VUE_APP_SERVER=http://localhost:8000/api/ && vue-cli-service build",
+    "serve:app": "export VUE_APP_SERVER=http://localhost:8080/api/ && vue-cli-service serve",
     "server": "node server/simple_issue_tracker.js"
   },
   "dependencies": {
