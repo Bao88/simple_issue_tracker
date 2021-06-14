@@ -5,7 +5,7 @@
   "scripts": {
     "serve:app": "vue-cli-service serve",
     "build:app": "vue-cli-service build",
-    "server": "",
+    "server": "node server/simple_issue_tracker.js",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

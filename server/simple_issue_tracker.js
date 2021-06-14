@@ -5,6 +5,7 @@
 const express = require("express");
 const app = express();
 const apiRoutes = require("./routing/api");
+const path = require('path')
 
 // Send the whole build folder to the user or anyone connected to the server
 app.use(express.static(path.join(__dirname, "../client/www")));
