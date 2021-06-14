@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="logo"></div>
+    <div class="title">Simple Issue Tracker</div>
     <IssueTrackerView class="view" />
   </div>
 </template>
@@ -35,8 +35,9 @@ body {
   grid-auto-flow: row;
 }
 
-.logo {
+.title {
   grid-area: 1 / 1 / 3 / 3;
+  margin: 20px 0 0 20px;
 }
 
 .view {
