@@ -1,5 +1,8 @@
 <template>
   <div class="issue-tracker-grid">
+    <button class="create-issue-button" @click="createIssue">
+      Create issue
+    </button>
     <div
       v-for="columnIndex in 3"
       class="flex-container border"
@@ -84,6 +87,7 @@ export default {
         })
         .catch(printError);
     };
+
     const createIssue = () => {
       fetch(`${server}issue`, {
         method: "POST",
@@ -93,7 +97,8 @@ export default {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
+          // Add to list
+          issues.value.push(data);
         })
         .catch(printError);
     };
@@ -188,5 +193,13 @@ export default {
   align-self: auto;
   order: 0;
   border: 2px solid;
+}
+
+.create-issue-button {
+  position: absolute;
+  width: 100px;
+  top: 20px;
+  left: 50%;
+  margin-left: -50px;
 }
 </style>

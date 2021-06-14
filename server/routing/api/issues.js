@@ -8,9 +8,9 @@ let id = 0; //
 class Issue {
   constructor(issue) {
     this.id = id++;
-    this.title = issue.title || "";
-    this.description = issue.description || "";
-    this.state = issue.state || "open";
+    this.title = issue?.title || "";
+    this.description = issue?.description || "";
+    this.state = issue?.state || "open";
   }
 }
 
