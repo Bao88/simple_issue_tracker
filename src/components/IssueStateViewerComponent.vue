@@ -16,55 +16,24 @@
         Issues
       </div>
 
-      <!--   {{ issues }} -->
-      <div
-        class="w-full mx-7 flex justify-between border-2"
-        style="height: 70%"
-      >
-        <div class="relative w-1/4 h-full text-center border-2">
-          Open
-          <div
-            :style="`height: ${openIssues}%`"
-            class="
-              bg-red-500
-              flex
-              items-center
-              justify-center
-              absolute
-              bottom-0
-            "
-          >
-            {{ openIssues + "%" }}
+      <!-- IssueContainer -->
+      <div class="w-full mx-7 flex justify-between" style="height: 70%">
+        <div
+          v-for="(stateBar, stateIndex) in stateContainer"
+          class="w-1/4 text-center"
+          :key="stateIndex"
+        >
+          <div class="h-1/6 flex items-center justify-center">
+            {{ stateBar.title }}
           </div>
-        </div>
-
-        <div class="w-1/4 text-center">
-          <div class="h-1/6 flex items-center justify-center">Pending</div>
-          <div class="relative h-5/6 border-2">
+          <div class="relative h-5/6">
             <div
-              :style="`height: ${50}%`"
-              class="
-                bg-green-500
-                flex
-                items-center
-                justify-center
-                w-full
-                absolute
-                bottom-0
-              "
+              :style="`height: ${getPercentage(stateBar.ref)}%`"
+              :class="stateBar.class"
+              class="flex items-center justify-center rounded-sm"
             >
-              {{ pendingIssues + "%" }}
+              {{ getPercentage(stateBar.ref) + "%" }}
             </div>
-          </div>
-        </div>
-
-        <div class="w-1/4 h-5/6 text-center">
-          Closed
-          <div
-            :style="`height: ${closedIssues}%`"
-            class="bg-yellow-500 flex items-center justify-center"
-          >
-            {{ closedIssues + "%" }}
           </div>
         </div>
       </div>
@@ -73,41 +42,54 @@
 </template>
 
 <script lang="ts">
-import { IssueState } from "@/store/models";
-import { computed, defineComponent } from "vue";
+import { Issue, IssueState } from "@/store/models";
+import { computed, defineComponent, ComputedRef } from "vue";
 import { appStore } from "../store/store";
 
 export default defineComponent({
   setup() {
     const issues = computed(() => appStore.getIssues());
 
-    const getPercentage = (whole: number, part: number) => {
-      return Math.round(100 * (part / whole)).toFixed(2);
+    const getPercentage = (list: ComputedRef<Issue[]>) => {
+      return Math.round(
+        100 * (list.value.length / issues.value.length)
+      ).toFixed(2);
     };
 
-    const openIssues = computed(() => {
-      const whole = issues.value.length;
-      const part = appStore.getIssueWithState(IssueState.open);
-      return getPercentage(whole, part.length);
-    });
+    const openIssues = computed(() =>
+      appStore.getIssueWithState(IssueState.open)
+    );
 
-    const pendingIssues = computed(() => {
-      const whole = issues.value.length;
-      const part = appStore.getIssueWithState(IssueState.pending);
-      return getPercentage(whole, part.length);
-    });
+    const pendingIssues = computed(() =>
+      appStore.getIssueWithState(IssueState.pending)
+    );
 
-    const closedIssues = computed(() => {
-      const whole = issues.value.length;
-      const part = appStore.getIssueWithState(IssueState.closed);
-      return getPercentage(whole, part.length);
-    });
+    const closedIssues = computed(() =>
+      appStore.getIssueWithState(IssueState.closed)
+    );
+
+    const stateContainer = [
+      {
+        ref: openIssues,
+        title: "Open",
+        class: "bg-green-500 w-full absolute bottom-0",
+      },
+      {
+        ref: pendingIssues,
+        title: "Pending",
+        class: "bg-yellow-500 w-full absolute bottom-0",
+      },
+      {
+        ref: closedIssues,
+        title: "Closed",
+        class: "bg-red-500  w-full absolute bottom-0",
+      },
+    ];
 
     return {
       issues,
-      openIssues,
-      pendingIssues,
-      closedIssues,
+      stateContainer,
+      getPercentage,
     };
   },
 });
