@@ -48,33 +48,6 @@ router.put("/issue", (request, response) => {
       }
     }
   });
-  /*
-  We can also test on the backend
-    Test if body is a valid issue
-    States can change from.
-    - Open -> Pending | Closed.
-    - Pending -> Closed
-    - Pending cant go back to Open
-    - Closed cant go back to Pending nor Open.
-    Suggestion:
-    const canChangeState = (originalState, newState) => {
-    //Edge case if originalState == newState, it means we dont need to update state.
-    if (originalState == newState) return true;
-
-    if (originalState == "open") return true;
-    else if (originalState == "pending" && newState == "closed") return true;
-    else return false;
-
-    or
-
-    return (
-      originalState == "open" ||
-      (originalState == "pending" && newState == "closed")
-    );
-  };
-    else send back error(invalid data 422 or 400).
-  */
-  response.send(body);
 });
 
 module.exports = router;
