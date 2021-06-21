@@ -32,7 +32,9 @@
           @blur="updateIssue(issue)"
         /> -->
 
-        <label :for="`issue-state-${columnIndex}-${issueIndex}`">State: </label>
+        <label :for="`issue-state-${columnIndex}-${issueIndex}`"
+          >IssueState:
+        </label>
         <!--  <select
           name="state"
           :id="`issue-state-${columnIndex}-${issueIndex}`"
@@ -97,11 +99,6 @@ export default defineComponent({
         (originalState == "pending" && newState == "closed")
       );
     }; */
-
-    // Fetch issues from server
-    onMounted(() => {
-      appStore.fetchIssues();
-    });
 
     const fetchIssues = () => {
       /* fetch(`${server}issues`, {

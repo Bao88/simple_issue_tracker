@@ -28,7 +28,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, onMounted } from "vue";
+import { appStore } from "./store/store";
+
+// Components
 import IssueTrackerComponent from "./components/IssueTrackerComponent.vue";
 import IssueStateViewerComponent from "./components/IssueStateViewerComponent.vue";
 import IssueFormComponent from "./components/IssueFormComponent.vue";
@@ -50,6 +53,11 @@ export default defineComponent({
     const closeIssueForm = () => {
       showFormOverlay.value = false;
     };
+
+    // Fetch issues from server
+    onMounted(() => {
+      appStore.fetchIssues();
+    });
 
     return {
       openIssueForm,

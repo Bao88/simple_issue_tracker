@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center items-center bg-">
+  <div class="flex justify-center items-center">
     <form
       action="/api/issue"
       method="post"
@@ -61,15 +61,15 @@
 
 <script lang="ts">
 import { defineComponent, Ref, ref } from "vue";
-import { State, Issue } from "../store/models";
+import { IssueState, Issue } from "../store/models";
 import { appStore } from "../store/store";
 
 export default defineComponent({
   setup() {
-    const validStates = Object.values(State);
+    const validStates = Object.values(IssueState);
 
     // Form values
-    const selectedState: Ref<State> = ref(State.open);
+    const selectedState: Ref<IssueState> = ref(IssueState.open);
     const titleText = ref("");
     const descriptionText = ref("");
 

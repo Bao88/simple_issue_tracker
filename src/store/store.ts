@@ -1,5 +1,5 @@
 import { reactive, readonly } from "vue";
-import { Issue, IssueData } from "./models";
+import { Issue, IssueData, IssueState } from "./models";
 
 // constants
 const server = process.env.VUE_APP_SERVER;
@@ -42,6 +42,14 @@ class AppStore extends Store<App> {
     this.state.issues.push(issue);
   }
 
+  getIssues(): Issue[] {
+    return this.getState().issues;
+  }
+
+  getIssueWithState(state: IssueState) {
+    return this.getState().issues.filter((issue) => issue.state == state);
+  }
+
   // Server methods
   // Fetch issues from server
   fetchIssues() {
@@ -54,6 +62,13 @@ class AppStore extends Store<App> {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
+        if (Array.isArray(data)) {
+          data.forEach((issue: IssueData) => {
+            this.addIssue(new Issue(issue));
+          });
+        } else {
+          console.log("Data is not an array");
+        }
       })
       .catch(printError);
   }

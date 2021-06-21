@@ -9,6 +9,17 @@ const issueSchema = new mongoose.Schema(
       default: "open",
     }, // Make sure the enum correlates to the front end model and vice-versa
     description: { type: String },
+
+    openDate: {
+      type: Date,
+      default: Date.now,
+    },
+    pendingDate: {
+      type: Date,
+    },
+    closedDate: {
+      type: Date,
+    },
   },
   { optimisticConcurrency: true }
 );
