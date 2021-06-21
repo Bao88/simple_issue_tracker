@@ -1,5 +1,12 @@
 <template>
   <div class="bg-green-400 w-screen h-screen text-white flex flex-wrap">
+    <!--  <div v-if="showFormOverlay">
+      <IssueFormComponent
+        @submitForm="closeIssueForm"
+        :isOverlay="true"
+        class="h-1/2 border-2"
+      />
+    </div> -->
     <div class="absolute text-lg flex justify-center items-center w-full h-20">
       Simple Issue Tracker
     </div>
@@ -21,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import IssueTrackerComponent from "./components/IssueTrackerComponent.vue";
 import IssueStateViewerComponent from "./components/IssueStateViewerComponent.vue";
 import IssueFormComponent from "./components/IssueFormComponent.vue";
@@ -34,12 +41,20 @@ export default defineComponent({
     IssueFormComponent,
   },
   setup() {
+    const showFormOverlay = ref(false);
+
     const openIssueForm = () => {
-      console.log("open issue form");
+      showFormOverlay.value = true;
+    };
+
+    const closeIssueForm = () => {
+      showFormOverlay.value = false;
     };
 
     return {
       openIssueForm,
+      showFormOverlay,
+      closeIssueForm,
     };
   },
 });

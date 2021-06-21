@@ -12,8 +12,10 @@ router.get("/issues", (request, response) => {
 
 // Post issue
 router.post("/issue", (request, response) => {
-  // create an empty issue
-  Issue.create({}, (error, issue) => {
+  const body = request.body;
+
+  // create an issue
+  Issue.create(body, (error, issue) => {
     if (error) response.status(400).send(error);
     else response.send(issue);
   });

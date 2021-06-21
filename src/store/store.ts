@@ -1,5 +1,5 @@
 import { reactive, readonly } from "vue";
-import { Issue } from "./models";
+import { Issue, IssueData } from "./models";
 
 // constants
 const server = process.env.VUE_APP_SERVER;
@@ -37,6 +37,11 @@ class AppStore extends Store<App> {
     };
   }
 
+  //Store methods
+  addIssue(issue: Issue) {
+    this.state.issues.push(issue);
+  }
+
   // Server methods
   // Fetch issues from server
   fetchIssues() {
@@ -49,6 +54,22 @@ class AppStore extends Store<App> {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
+      })
+      .catch(printError);
+  }
+
+  createIssue(issue: Issue) {
+    fetch(`${server}issue`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(issue),
+    })
+      .then((response) => response.json())
+      .then((data: IssueData) => {
+        const issue = new Issue(data);
+        this.addIssue(issue);
       })
       .catch(printError);
   }

@@ -1,7 +1,7 @@
-enum State {
+export enum State {
   open = "open",
-  closed = "closed",
   pending = "pending",
+  closed = "closed",
 }
 
 export interface IssueData {
