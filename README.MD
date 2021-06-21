@@ -48,7 +48,7 @@ Improvement:
 
 ## back cons
 
-- express used but not added to deps
+- ~~express used but not added to deps~~
 - doesn't use any db, just storing in memory. Good enough, but hard to judge the skills based on that.
 - no data validation
 - code to validate issue states in the comment only
