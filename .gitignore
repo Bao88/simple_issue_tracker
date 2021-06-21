@@ -5,3 +5,5 @@ node_modules
 # Log files
 yarn-debug.log*
 yarn-error.log*
+
+.env
