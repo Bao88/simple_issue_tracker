@@ -1,8 +1,8 @@
 <template>
-  <div class="issue-tracker-grid">
+  <div class="issue-tracker-grid md:hidden">
     <button
       id="create-issue-button"
-      class="create-issue-button"
+      class="create-issue-button md:hidden"
       @click="createIssue"
     >
       Create issue
@@ -15,23 +15,23 @@
       :key="'issue column' + columnIndex"
     >
       <div class="grid-column-header">{{ states[columnIndex - 1] }}</div>
-      <div
+      <!--  <div
         v-for="(issue, issueIndex) in getIssuesWithState(columnIndex - 1)"
         :id="'column-' + columnIndex"
         :key="`column-${columnIndex}-issue-${issueIndex}`"
         class="issue"
-      >
-        <!-- Add the issue if it is in the correct column and create unique id for each issue -->
-        <label :for="`issue-title-${columnIndex}-${issueIndex}`">Title: </label>
+      > -->
+      <!-- Add the issue if it is in the correct column and create unique id for each issue -->
+      <!--    <label :for="`issue-title-${columnIndex}-${issueIndex}`">Title: </label>
         <input
           :id="`issue-title${columnIndex}-${issueIndex}`"
           type="text"
           class="full-width"
           v-model="issue.title"
           @blur="updateIssue(issue)"
-        />
+        /> -->
 
-        <label :for="`issue-state-${columnIndex}-${issueIndex}`">State: </label>
+      <!-- <label :for="`issue-state-${columnIndex}-${issueIndex}`">State: </label>
         <select
           name="state"
           :id="`issue-state-${columnIndex}-${issueIndex}`"
@@ -44,9 +44,9 @@
           <option value="closed" :selected="'closed' == issue.state">
             closed
           </option>
-        </select>
+        </select> -->
 
-        <label
+      <!--  <label
           class="full-width"
           :for="`issue-description-${columnIndex}-${issueIndex}`"
           >Description:
@@ -57,34 +57,37 @@
           v-model="issue.description"
           @blur="updateIssue(issue)"
         />
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
 
-<script>
-import { ref, onMounted } from "vue";
+<script lang="ts">
+import { ref, onMounted, defineComponent } from "vue";
+import { appStore } from "../store/store";
 
 // constants
 const server = process.env.VUE_APP_SERVER;
 const states = ["open", "pending", "closed"];
 
-export default {
+export default defineComponent({
   name: "IssueTrackerView",
   components: {},
   setup() {
     const issues = ref([]);
 
     // Methods
-    const printError = (error) => {
+    const printError = (error: Error) => {
       console.log(error);
     };
+
+    console.log(appStore);
 
     // Check if the state of an issue can be changed.
     // Open can be changed to either Pending or Closed
     // Pending can be changed to Closed but not to Open
     // Closed can't change state.
-    const canChangeState = (originalState, newState) => {
+    /*  const canChangeState = (originalState: string, newState: string) => {
       //Edge case if originalState == newState, it means we dont need to update state.
       if (originalState == newState) return true;
 
@@ -92,7 +95,7 @@ export default {
         originalState == "open" ||
         (originalState == "pending" && newState == "closed")
       );
-    };
+    }; */
 
     // Fetch issues from server
     const fetchIssues = () => {
@@ -120,12 +123,12 @@ export default {
         .then((response) => response.json())
         .then((data) => {
           // Add to list
-          issues.value.push(data);
+          issues.value.push(data as never);
         })
         .catch(printError);
     };
 
-    // Update an issue
+    /*  // Update an issue
     const updateIssue = (issue) => {
       fetch(`${server}issue`, {
         method: "PUT",
@@ -139,9 +142,9 @@ export default {
           console.log(data);
         })
         .catch(printError);
-    };
+    }; */
 
-    const updateIssueState = (issue, event) => {
+    /*  const updateIssueState = (issue: {state: string}, event: HTMLSelectElement) => {
       const state = event.target.value;
       // Test if the state can be changed
       if (canChangeState(issue.state, state)) {
@@ -152,19 +155,19 @@ export default {
         // Reset the selected value
         event.target.value = issue.state;
       }
-    };
+    }; */
 
     // Helper functions for template
-    const isSameState = (columnIndex, issueState) => {
+    /*  const isSameState = (columnIndex: number, issueState: string) => {
       const columnState = states[columnIndex];
       return columnState == issueState;
-    };
+    }; */
 
-    const getIssuesWithState = (columnIndex) => {
+    /*  const getIssuesWithState = (columnIndex: number) => {
       return issues.value.filter((issue) =>
         isSameState(columnIndex, issue.state)
       );
-    };
+    }; */
 
     // Fetch isses when mounted
     onMounted(() => {
@@ -178,12 +181,12 @@ export default {
       issues,
       // Methods
       createIssue,
-      updateIssueState,
-      updateIssue,
-      getIssuesWithState,
+      /* updateIssueState, */
+      /*   updateIssue,
+      getIssuesWithState, */
     };
   },
-};
+});
 </script>
 
 <style scoped>

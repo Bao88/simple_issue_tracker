@@ -26,6 +26,41 @@ Improvement:
   - Handling of updates.
   - Find out why favicon doesnt work on EDGE
 
+# Feedback
+
+## general cons
+
+- readme missing command to start server
+- UI looks horrible
+- completely no RWD
+- ~~`HelloWorld.vue` not used xD~~
+
+## general pros
+
+- instructions how to start front
+- nice description of was is done
+- a lot of relevant possible improvements listed
+
+## back pros
+
+- app is very simple, no abstractions
+- code is very easy but also not many features implemented there so..
+
+## back cons
+
+- express used but not added to deps
+- doesn't use any db, just storing in memory. Good enough, but hard to judge the skills based on that.
+- no data validation
+- code to validate issue states in the comment only
+
+## front pros
+
+- CSS grid used
+
+## front cons
+
+- everything in 1 component - usually this is a big minus. Logic mixed with presentation and styling [https://v3.vuejs.org/guide/single-file-component.html#introduction](Single File Component)
+
 ## How to use
 
 -
@@ -48,7 +83,7 @@ yarn run serve:app
 yarn run build:app
 ```
 
-### Run server
+### Run server (For front end to communicate with server)
 
 ```
 yarn run server

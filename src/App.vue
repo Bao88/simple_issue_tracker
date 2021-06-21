@@ -5,15 +5,16 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from "vue";
 import IssueTrackerView from "./views/IssueTrackerView.vue";
 
-export default {
+export default defineComponent({
   name: "App",
   components: {
     IssueTrackerView,
   },
-};
+});
 </script>
 
 <style>
