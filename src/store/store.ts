@@ -1,6 +1,14 @@
 import { reactive, readonly } from "vue";
 import { Issue } from "./models";
 
+// constants
+const server = process.env.VUE_APP_SERVER;
+
+// Helper functions
+const printError = (error: Error) => {
+  console.log(error);
+};
+
 // eslint-disable-next-line @typescript-eslint/ban-types
 export abstract class Store<T extends Object> {
   protected state: T;
@@ -29,7 +37,21 @@ class AppStore extends Store<App> {
     };
   }
 
-  // Methods
+  // Server methods
+  // Fetch issues from server
+  fetchIssues() {
+    fetch(`${server}issues`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch(printError);
+  }
 }
 
 export const appStore: AppStore = new AppStore();

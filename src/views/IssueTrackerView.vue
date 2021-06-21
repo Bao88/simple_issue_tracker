@@ -15,15 +15,16 @@
       :key="'issue column' + columnIndex"
     >
       <div class="grid-column-header">{{ states[columnIndex - 1] }}</div>
-      <!--  <div
+      <div
         v-for="(issue, issueIndex) in getIssuesWithState(columnIndex - 1)"
         :id="'column-' + columnIndex"
         :key="`column-${columnIndex}-issue-${issueIndex}`"
         class="issue"
-      > -->
-      <!-- Add the issue if it is in the correct column and create unique id for each issue -->
-      <!--    <label :for="`issue-title-${columnIndex}-${issueIndex}`">Title: </label>
-        <input
+      >
+        <IssueComponent :issue="issue"></IssueComponent>
+        <!-- Add the issue if it is in the correct column and create unique id for each issue -->
+        <label :for="`issue-title-${columnIndex}-${issueIndex}`">Title: </label>
+        <!--  <input
           :id="`issue-title${columnIndex}-${issueIndex}`"
           type="text"
           class="full-width"
@@ -31,8 +32,8 @@
           @blur="updateIssue(issue)"
         /> -->
 
-      <!-- <label :for="`issue-state-${columnIndex}-${issueIndex}`">State: </label>
-        <select
+        <label :for="`issue-state-${columnIndex}-${issueIndex}`">State: </label>
+        <!--  <select
           name="state"
           :id="`issue-state-${columnIndex}-${issueIndex}`"
           @change="updateIssueState(issue, $event)"
@@ -46,7 +47,7 @@
           </option>
         </select> -->
 
-      <!--  <label
+        <label
           class="full-width"
           :for="`issue-description-${columnIndex}-${issueIndex}`"
           >Description:
@@ -57,7 +58,7 @@
           v-model="issue.description"
           @blur="updateIssue(issue)"
         />
-      </div> -->
+      </div>
     </div>
   </div>
 </template>
@@ -67,19 +68,19 @@ import { ref, onMounted, defineComponent } from "vue";
 import { appStore } from "../store/store";
 
 // constants
-const server = process.env.VUE_APP_SERVER;
 const states = ["open", "pending", "closed"];
+
+// Components
+import IssueComponent from "../components/IssueComponent.vue";
+import { Issue } from "@/store/models";
 
 export default defineComponent({
   name: "IssueTrackerView",
-  components: {},
+  components: { IssueComponent },
   setup() {
     const issues = ref([]);
 
     // Methods
-    const printError = (error: Error) => {
-      console.log(error);
-    };
 
     console.log(appStore);
 
@@ -87,7 +88,7 @@ export default defineComponent({
     // Open can be changed to either Pending or Closed
     // Pending can be changed to Closed but not to Open
     // Closed can't change state.
-    /*  const canChangeState = (originalState: string, newState: string) => {
+    /* const canChangeState = (originalState: string, newState: string) => {
       //Edge case if originalState == newState, it means we dont need to update state.
       if (originalState == newState) return true;
 
@@ -98,8 +99,12 @@ export default defineComponent({
     }; */
 
     // Fetch issues from server
+    onMounted(() => {
+      appStore.fetchIssues();
+    });
+
     const fetchIssues = () => {
-      fetch(`${server}issues`, {
+      /* fetch(`${server}issues`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -109,12 +114,12 @@ export default defineComponent({
         .then((data) => {
           issues.value = Object.values(data);
         })
-        .catch(printError);
+        .catch(printError); */
     };
 
     // Create a new issue
     const createIssue = () => {
-      fetch(`${server}issue`, {
+      /* fetch(`${server}issue`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -125,11 +130,11 @@ export default defineComponent({
           // Add to list
           issues.value.push(data as never);
         })
-        .catch(printError);
+        .catch(printError); */
     };
 
-    /*  // Update an issue
-    const updateIssue = (issue) => {
+    // Update an issue
+    /* const updateIssue = (issue) => {
       fetch(`${server}issue`, {
         method: "PUT",
         headers: {
@@ -144,7 +149,10 @@ export default defineComponent({
         .catch(printError);
     }; */
 
-    /*  const updateIssueState = (issue: {state: string}, event: HTMLSelectElement) => {
+    /*  const updateIssueState = (
+      issue: { state: string },
+      event: HTMLSelectElement
+    ) => {
       const state = event.target.value;
       // Test if the state can be changed
       if (canChangeState(issue.state, state)) {
@@ -158,16 +166,16 @@ export default defineComponent({
     }; */
 
     // Helper functions for template
-    /*  const isSameState = (columnIndex: number, issueState: string) => {
+    const isSameState = (columnIndex: number, issueState: string) => {
       const columnState = states[columnIndex];
       return columnState == issueState;
-    }; */
+    };
 
-    /*  const getIssuesWithState = (columnIndex: number) => {
-      return issues.value.filter((issue) =>
+    const getIssuesWithState = (columnIndex: number) => {
+      return issues.value.filter((issue: Issue) =>
         isSameState(columnIndex, issue.state)
       );
-    }; */
+    };
 
     // Fetch isses when mounted
     onMounted(() => {
@@ -182,8 +190,8 @@ export default defineComponent({
       // Methods
       createIssue,
       /* updateIssueState, */
-      /*   updateIssue,
-      getIssuesWithState, */
+      /*  updateIssue, */
+      getIssuesWithState,
     };
   },
 });

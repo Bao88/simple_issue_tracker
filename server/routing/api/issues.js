@@ -5,8 +5,8 @@ const Issue = require("../../models/Issue");
 // Get all issues
 router.get("/issues", (request, response) => {
   Issue.find({}, (error, issues) => {
-    if (error) respond.status(400).send(error);
-    else respond.send(issues);
+    if (error) response.status(400).send(error);
+    else response.send(issues);
   });
 });
 
