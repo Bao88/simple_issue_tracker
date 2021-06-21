@@ -1,10 +1,17 @@
 const mongoose = require("mongoose");
 
-const issueSchema = new mongoose.Schema({
-  title: { type: String },
-  state: { type: String, enum: ["open", "closed", "pending"], default: "open" }, // Make sure the enum correlates to the front end model and vice-versa
-  description: { type: String },
-});
+const issueSchema = new mongoose.Schema(
+  {
+    title: { type: String },
+    state: {
+      type: String,
+      enum: ["open", "closed", "pending"],
+      default: "open",
+    }, // Make sure the enum correlates to the front end model and vice-versa
+    description: { type: String },
+  },
+  { optimisticConcurrency: true }
+);
 
 // Duplicate the ID field.
 // eslint-disable-next-line

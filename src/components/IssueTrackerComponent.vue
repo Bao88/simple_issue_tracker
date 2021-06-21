@@ -1,5 +1,5 @@
 <template>
-  <div class="issue-tracker-grid md:hidden">
+  <div class="issue-tracker-grid w-full border-4">
     <button
       id="create-issue-button"
       class="create-issue-button md:hidden"
@@ -71,7 +71,7 @@ import { appStore } from "../store/store";
 const states = ["open", "pending", "closed"];
 
 // Components
-import IssueComponent from "../components/IssueComponent.vue";
+import IssueComponent from "./IssueComponent.vue";
 import { Issue } from "@/store/models";
 
 export default defineComponent({

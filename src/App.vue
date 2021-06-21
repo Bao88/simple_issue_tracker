@@ -1,18 +1,46 @@
 <template>
-  <div class="container">
-    <div class="title">Simple Issue Tracker</div>
-    <IssueTrackerView class="view" />
+  <div class="bg-green-400 w-screen h-screen text-white flex flex-wrap">
+    <div class="absolute text-lg flex justify-center items-center w-full h-20">
+      Simple Issue Tracker
+    </div>
+
+    <IssueTrackerComponent class="w-full sm:w-2/3 pt-20" />
+
+    <!-- Hide in smaller devices -->
+    <div class="hidden sm:block sm:w-1/3 pt-20">
+      <IssueStateViewerComponent class="h-1/2 border-2" />
+      <IssueFormComponent class="h-1/2 border-2" />
+    </div>
+
+    <!-- Tools -->
+    <button
+      class="sm:hidden absolute bottom-3 right-4 bg-green-900 plus rounded-full"
+      @click="openIssueForm"
+    ></button>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import IssueTrackerView from "./views/IssueTrackerView.vue";
+import IssueTrackerComponent from "./components/IssueTrackerComponent.vue";
+import IssueStateViewerComponent from "./components/IssueStateViewerComponent.vue";
+import IssueFormComponent from "./components/IssueFormComponent.vue";
 
 export default defineComponent({
   name: "App",
   components: {
-    IssueTrackerView,
+    IssueTrackerComponent,
+    IssueStateViewerComponent,
+    IssueFormComponent,
+  },
+  setup() {
+    const openIssueForm = () => {
+      console.log("open issue form");
+    };
+
+    return {
+      openIssueForm,
+    };
   },
 });
 </script>
@@ -26,27 +54,15 @@ body {
   width: 100vw;
 }
 
-.container {
-  height: 100vh;
-  width: inherit;
-  display: grid;
-  grid-template-columns: 0.7fr 3fr 0.7fr;
-  grid-template-rows: 0.5fr 4.5fr 0.5fr;
-  gap: 0px 0px;
-  grid-auto-flow: row;
-}
+/* source: https://stackoverflow.com/questions/55281672/make-plus-symbol-in-css */
+.plus {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
 
-.title {
-  grid-area: 1 / 1 / 3 / 3;
-  margin: 20px 0 0 20px;
-}
-
-.view {
-  grid-area: 2 / 2 / 3 / 3;
-  overflow-y: auto;
-}
-
-.border {
-  border: 2px solid black;
+  background: linear-gradient(#fff, #fff), linear-gradient(#fff, #fff), #000;
+  background-position: center;
+  background-size: 50% 2px, 2px 50%; /*thickness = 2px, length = 50% (25px)*/
+  background-repeat: no-repeat;
 }
 </style>
