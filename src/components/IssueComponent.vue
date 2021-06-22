@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="h-60 border-2">
     <div>{{ issue.title }}</div>
     <select v-model="selectedState" name="state">
       <option value="open" :selected="'open' == issue.state">open</option>

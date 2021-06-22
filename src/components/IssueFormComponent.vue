@@ -16,7 +16,7 @@
       @submit.prevent="submitIssue"
       id="IssueForm"
     >
-      <div class="w-full text-lg text-center mt-2">Create Issue</div>
+      <div class="w-full text-center mt-2 text-xl font-bold">Create Issue</div>
       <div class="w-5/6">
         <label class="w-1/4 text-center" for="formTitle">Title: </label>
         <input

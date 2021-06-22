@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-green-400 w-screen h-screen text-white flex flex-wrap">
+  <div class="bg-green-400 w-screen h-screen text-white">
     <!--  <div v-if="showFormOverlay">
       <IssueFormComponent
         @submitForm="closeIssueForm"
@@ -7,23 +7,41 @@
         class="h-1/2 border-2"
       />
     </div> -->
-    <div class="absolute text-lg flex justify-center items-center w-full h-20">
+    <div
+      class="text-2xl font-bold flex justify-center items-center w-full"
+      style="height: 5%"
+    >
       Simple Issue Tracker
     </div>
 
-    <IssueTrackerComponent class="w-full sm:w-2/3 pt-20" />
+    <!-- Dashboard -->
+    <div class="grid grid-cols-12 grid-rows-4 gap-4" style="height: 95%">
+      <IssueTrackerComponent
+        class="w-full col-span-full xl:col-span-9 row-span-4"
+      />
 
-    <!-- Hide in smaller devices -->
-    <div class="hidden sm:block sm:w-1/3 pt-20">
-      <IssueStateViewerComponent class="h-1/2 border-2" />
-      <IssueFormComponent class="h-1/2 border-2" />
+      <!-- Hide in smaller devices -->
+      <!--   <div class="hidden sm:block sm:w-1/3 pt-20 pb-20 col-span-1"> -->
+      <IssueStateViewerComponent
+        class="hidden xl:flex xl:col-span-3 xl:row-span-2"
+      />
+      <IssueFormComponent class="hidden xl:flex xl:col-span-3 xl:row-span-2" />
+      <!--  </div> -->
+
+      <!-- Tools -->
+      <button
+        class="
+          xl:hidden
+          absolute
+          bottom-3
+          right-4
+          bg-green-900
+          plus
+          rounded-full
+        "
+        @click="openIssueForm"
+      ></button>
     </div>
-
-    <!-- Tools -->
-    <button
-      class="sm:hidden absolute bottom-3 right-4 bg-green-900 plus rounded-full"
-      @click="openIssueForm"
-    ></button>
   </div>
 </template>
 

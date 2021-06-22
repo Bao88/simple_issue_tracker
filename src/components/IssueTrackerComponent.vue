@@ -1,21 +1,44 @@
 <template>
-  <div class="grid grid-cols-3 w-full">
-    <div
-      id="issue-tracker-grid"
-      v-for="(issueComp, issueCompIndex) in computedIssues"
-      class="flex-container border"
-      :key="issueCompIndex"
-    >
-      <div class="m-7 border-2">
-        <div class="w-full text-lg text-center mt-2" style="height: 10%">
+  <div class="flex justify-center items-center overflow-hidden">
+    <div class="grid grid-cols-3 gap-4" style="height: 92%; width: 90%">
+      <div
+        id="issue-tracker-grid"
+        v-for="(issueComp, issueCompIndex) in computedIssues"
+        class="
+          bg-blue-500
+          shadow-2xl
+          rounded-md
+          overflow-y-auto
+          scroll
+          relative
+        "
+        :key="issueCompIndex"
+      >
+        <div
+          class="
+            fixed
+            w-32
+            border-2
+            text-xl
+            ml-5
+            mt-5
+            text-center
+            font-bold
+            capitalize
+            z-10
+            bg-blue-500
+            rounded-lg
+          "
+        >
           {{ states[issueCompIndex] }}
         </div>
-
-        <IssueComponent
-          v-for="(issue, issueIndex) in issueComp.value"
-          :issue="issue"
-          :key="`${issueCompIndex}-${issueIndex}`"
-        />
+        <div class="m-10 border-2">
+          <IssueComponent
+            v-for="(issue, issueIndex) in issueComp.value"
+            :issue="issue"
+            :key="`${issueCompIndex}-${issueIndex}`"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -154,43 +177,14 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.flex-container {
-  display: flex;
-  flex-direction: column;
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scroll::-webkit-scrollbar {
+  display: none;
 }
 
-.grid-column-header {
-  display: flex;
-  justify-content: center;
-  font-size: 20px;
-  font-weight: 800;
-  text-transform: capitalize;
-}
-
-.issue {
-  display: flex;
-  flex-wrap: wrap;
-  border: 2px solid;
-  margin: 2px 0 2px 0;
-  justify-content: space-between;
-}
-
-.full-width {
-  width: 100%;
-}
-
-.create-issue-button {
-  position: absolute;
-  width: 100px;
-  top: 20px;
-  left: 50%;
-  margin-left: -50px;
-}
-
-/* Styling for issue's children */
-textarea {
-  height: 100px;
-  width: 100%;
-  resize: vertical;
+/* Hide scrollbar for IE, Edge and Firefox */
+.scroll {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 </style>

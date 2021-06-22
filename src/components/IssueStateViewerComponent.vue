@@ -12,7 +12,10 @@
         justify-center
       "
     >
-      <div class="w-full text-lg text-center mt-2" style="height: 10%">
+      <div
+        class="w-full text-xl font-bold text-center mt-2"
+        style="height: 10%"
+      >
         Issues
       </div>
 
@@ -72,7 +75,7 @@ export default defineComponent({
       {
         ref: openIssues,
         title: "Open",
-        class: "bg-green-500 w-full absolute bottom-0",
+        class: "bg-purple-500 w-full absolute bottom-0",
       },
       {
         ref: pendingIssues,
