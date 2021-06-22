@@ -63,9 +63,21 @@ Improvement:
 
 ## How to use
 
--
+You will need to install MongoDB and run it locally.
+This is for development / educational purposes only.
 
-## Project setup
+## Development setup
+
+1. Run "yarn install"
+2. yarn run serve:app
+3. yarn run server
+
+## Let server serve the app
+
+1. Run "yarn install"
+2. yarn run build:app
+3. yarn run server
+4. Use the URL provided in the terminal after running the server to access the app.
 
 ```
 yarn install
@@ -94,7 +106,3 @@ yarn run server
 ```
 yarn lint
 ```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
