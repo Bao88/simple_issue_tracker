@@ -1,6 +1,9 @@
 <template>
   <div class="flex justify-center items-center overflow-hidden">
-    <div class="grid grid-cols-3 gap-4" style="height: 92%; width: 90%">
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"
+      style="height: 92%; width: 90%"
+    >
       <div
         id="issue-tracker-grid"
         v-for="(issueComp, issueCompIndex) in computedIssues"

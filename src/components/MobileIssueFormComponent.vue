@@ -12,6 +12,7 @@
         w-5/6
         bg-blue-500
         justify-center
+        p-2
       "
       @submit.prevent="submitIssue"
       id="IssueForm"
@@ -29,7 +30,7 @@
         />
       </div>
 
-      <div class="w-5/6">
+      <div class="w-5/6 py-1">
         <label for="formSelect">State: </label>
         <select
           v-model="selectedState"
@@ -60,7 +61,7 @@
       </div>
 
       <input
-        class="w-1/2 py-2 bg-green-500 text-white rounded-full"
+        class="w-1/2 py-1 bg-green-500 text-white rounded-full"
         type="submit"
         value="Create"
       />
@@ -74,7 +75,7 @@ import { IssueState, Issue } from "../store/models";
 import { appStore } from "../store/store";
 
 export default defineComponent({
-  setup() {
+  setup(props, context) {
     const validStates = Object.values(IssueState);
 
     // Form values
@@ -86,6 +87,7 @@ export default defineComponent({
       titleText.value = "";
       descriptionText.value = "";
       selectedState.value = IssueState.open;
+      context.emit("formSubmitted");
     };
 
     //Method

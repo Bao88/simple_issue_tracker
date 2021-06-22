@@ -15,6 +15,27 @@
       Simple Issue Tracker
     </div>
 
+    <div
+      v-if="showFormOverlay"
+      class="
+        absolute
+        top-0
+        left-0
+        w-full
+        h-full
+        flex
+        justify-center
+        items-center
+        z-20
+        bg-gray-500 bg-opacity-50
+      "
+    >
+      <MobileIssueFormComponent
+        @formSubmitted="closeIssueForm"
+        class="xl:hidden max-form-width"
+      />
+    </div>
+
     <!-- Dashboard -->
     <div class="grid grid-cols-12 grid-rows-4 gap-4" style="height: 95%">
       <IssueTrackerComponent
@@ -54,6 +75,7 @@ import { appStore } from "./store/store";
 import IssueTrackerComponent from "./components/IssueTrackerComponent.vue";
 import IssueStateViewerComponent from "./components/IssueStateViewerComponent.vue";
 import IssueFormComponent from "./components/IssueFormComponent.vue";
+import MobileIssueFormComponent from "./components/MobileIssueFormComponent.vue";
 
 export default defineComponent({
   name: "App",
@@ -61,6 +83,7 @@ export default defineComponent({
     IssueTrackerComponent,
     IssueStateViewerComponent,
     IssueFormComponent,
+    MobileIssueFormComponent,
   },
   setup() {
     const showFormOverlay = ref(false);
@@ -113,5 +136,9 @@ select,
 option {
   color: black;
   text-align: center;
+}
+
+.max-form-width {
+  max-width: 500px;
 }
 </style>
