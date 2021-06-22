@@ -15,15 +15,15 @@ Currrently it can:
 Improvement:
 
 - Backend:
-  - Integrate database
-  - Backend checks for data validity
+  - Deletions
+  - ~~Integrate database~~
+  - ~~Backend checks for data validity~~
   - Websocket to update users table "realtime" so multiple users can use the app in paralell.
 - Frontend:
-  - Use HTML "table" element
-  - Integrate a store(to keep the state) to separate codes into smaller components.
+  - ~~Integrate a store(to keep the state) to separate codes into smaller components.~~
   - Drag and drop of issues
-  - Improve responsiveness
-  - Handling of updates.
+  - ~~Improve responsiveness~~
+  - ~~Handling of updates.~~
   - Find out why favicon doesnt work on EDGE
 
 # Feedback
@@ -32,7 +32,7 @@ Improvement:
 
 - readme missing command to start server
 - UI looks horrible
-- completely no RWD
+- ~~completely no RWD~~
 - ~~`HelloWorld.vue` not used xD~~
 
 ## general pros
@@ -49,9 +49,9 @@ Improvement:
 ## back cons
 
 - ~~express used but not added to deps~~
-- doesn't use any db, just storing in memory. Good enough, but hard to judge the skills based on that.
-- no data validation
-- code to validate issue states in the comment only
+- ~~doesn't use any db, just storing in memory. Good enough, but hard to judge the skills based on that.~~
+- ~~no data validation~~
+- ~~code to validate issue states in the comment only~~
 
 ## front pros
 
@@ -59,7 +59,7 @@ Improvement:
 
 ## front cons
 
-- everything in 1 component - usually this is a big minus. Logic mixed with presentation and styling [https://v3.vuejs.org/guide/single-file-component.html#introduction](Single File Component)
+- ~~everything in 1 component - usually this is a big minus. Logic mixed with presentation and styling~~ [https://v3.vuejs.org/guide/single-file-component.html#introduction](Single File Component)
 
 ## How to use
 
