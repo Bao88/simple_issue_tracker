@@ -36,7 +36,7 @@
           <IssueComponent
             v-for="(issue, issueIndex) in issueComp.value"
             :issue="issue"
-            :key="`${issueCompIndex}-${issueIndex}`"
+            :key="`${issue.id}-${issueIndex}`"
           />
         </div>
       </div>

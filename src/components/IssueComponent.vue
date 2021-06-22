@@ -1,7 +1,7 @@
 <template>
   <div class="h-60 border-2">
     <div>{{ issue.title }}</div>
-    <select v-model="selectedState" name="state">
+    <select v-model="selectedState" name="state" @change="updateIssueState">
       <option value="open" :selected="'open' == issue.state">open</option>
       <option value="pending" :selected="'pending' == issue.state">
         pending
@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from "vue";
+import { defineComponent, ref } from "vue";
 import { Issue } from "../store/models";
 import { appStore } from "../store/store";
 
@@ -64,12 +64,7 @@ export default defineComponent({
   setup(props) {
     const selectedState = ref(props.issue.state);
 
-    // Update an issue
-    const modifyIssue = (issue: Issue) => {
-      console.log(issue);
-      appStore.updateIssue(issue);
-    };
-
+    // Helper function
     const canChangeState = (originalState: string, newState: string) => {
       //Edge case if originalState == newState, it means we dont need to update state.
       if (originalState == newState) return true;
@@ -80,7 +75,12 @@ export default defineComponent({
       );
     };
 
-    /* const updateIssueState = (issue: Issue) => {
+    const modifyIssue = (issue: Issue) => {
+      appStore.updateIssue(issue).catch((error) => console.log(error));
+    };
+
+    const updateIssueState = () => {
+      const issue = { ...props.issue };
       // Test if the state can be changed
       if (canChangeState(issue.state, selectedState.value)) {
         // Modify the issue before sending
@@ -90,25 +90,21 @@ export default defineComponent({
         // Reset the selected value
         selectedState.value = issue.state;
       }
-    }; */
-
-    watch(
-      () => selectedState.value,
-      (newValue, oldValue) => {
-        if (canChangeState(oldValue, newValue)) {
-          const newIssue = { ...props.issue };
-          newIssue.state = newValue;
-          modifyIssue(newIssue);
-        } else {
-          selectedState.value = oldValue;
-        }
-      }
-    );
+    };
 
     return {
       modifyIssue,
+      updateIssueState,
       selectedState,
     };
   },
 });
 </script>
+
+<style scoped>
+select,
+option {
+  color: black;
+  text-align: center;
+}
+</style>

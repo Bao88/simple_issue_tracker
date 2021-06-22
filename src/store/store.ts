@@ -88,19 +88,33 @@ class AppStore extends Store<App> {
       .catch(printError);
   }
 
-  updateIssue(issue: Issue) {
-    fetch(`${server}issue`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(issue),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
+  updateIssue(issue: Issue): Promise<void | Error> {
+    return new Promise((resolve, reject) => {
+      fetch(`${server}issue`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(issue),
       })
-      .catch(printError);
+        .then((response) => response.json())
+        .then((data) => {
+          const issue = new Issue(data);
+
+          // Modify local Issue
+
+          const index = this.getState().issues.findIndex(
+            (storeIssue) => storeIssue.id == issue.id
+          );
+          if (index > -1) {
+            this.state.issues.splice(index, 1, issue);
+            resolve();
+          } else reject();
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
   }
 }
 

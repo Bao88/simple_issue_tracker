@@ -34,7 +34,7 @@ router.put("/issue", (request, response) => {
   };
 
   const body = request.body;
-  Issue.find({ _id: body.id }, (error, issue) => {
+  Issue.findOne({ _id: body.id }, (error, issue) => {
     if (error) response.status(400).send(error);
     else {
       // Test if the state can be changed

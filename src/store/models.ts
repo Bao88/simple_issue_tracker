@@ -5,6 +5,7 @@ export enum IssueState {
 }
 
 export interface IssueData {
+  id?: string;
   title: string;
   state: IssueState;
   description: string;
@@ -16,6 +17,7 @@ export interface IssueData {
 
 // ISsue class
 export class Issue {
+  id: string;
   title: string;
   state: IssueState;
   description: string;
@@ -24,6 +26,7 @@ export class Issue {
   closedDate?: Date;
 
   constructor(issue: IssueData) {
+    this.id = issue.id || "";
     this.title = issue.title;
     this.state = issue.state;
     this.description = issue.description;
