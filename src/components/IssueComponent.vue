@@ -1,51 +1,52 @@
 <template>
-  <div class="h-60 border-2">
-    <div>{{ issue.title }}</div>
-    <select v-model="selectedState" name="state" @change="updateIssueState">
-      <option value="open" :selected="'open' == issue.state">open</option>
-      <option value="pending" :selected="'pending' == issue.state">
-        pending
-      </option>
-      <option value="closed" :selected="'closed' == issue.state">closed</option>
-    </select>
-    <!-- Add the issue if it is in the correct column and create unique id for each issue -->
-    <!--     <label :for="`issue-title-${columnIndex}-${issueIndex}`">Title: </label>
-     <input
-          :id="`issue-title${columnIndex}-${issueIndex}`"
-          type="text"
-          class="full-width"
-          v-model="issue.title"
-          @blur="updateIssue(issue)"
-        />
+  <div class="h-60 w-full rounded-lg p-2">
+    <div class="flex mt-3">
+      <label class="w-1/4 text-center" :for="`issue-title-${issue.id}`"
+        >Title:
+      </label>
+      <input
+        :id="`issue-title-${issue.id}`"
+        type="text"
+        class="w-3/4"
+        v-model="issueTitle"
+        @blur="updateIssue"
+      />
+    </div>
 
-    <label :for="`issue-state-${columnIndex}-${issueIndex}`"
-      >IssueState:
-    </label>
+    <div class="flex py-2">
+      <label class="w-1/4 text-center" :for="`issue-state-${issue.id}`"
+        >State:
+      </label>
+      <select
+        :id="`issue-state-${issue.id}`"
+        v-model="selectedState"
+        class="capitalize"
+        name="state"
+        @change="updateIssueState"
+      >
+        <option value="open" :selected="'open' == issue.state">open</option>
+        <option value="pending" :selected="'pending' == issue.state">
+          pending
+        </option>
+        <option value="closed" :selected="'closed' == issue.state">
+          closed
+        </option>
+      </select>
+    </div>
 
-    <label
-      class="full-width"
-      :for="`issue-description-${columnIndex}-${issueIndex}`"
-      >Description:
-    </label>
-    <textarea
-      :id="`issue-description-${columnIndex}-${issueIndex}`"
-      type="text"
-      v-model="issue.description"
-      @blur="updateIssue(issue)"
-    /> -->
-    <!--  <select
-          name="state"
-          :id="`issue-state-${columnIndex}-${issueIndex}`"
-          @change="updateIssueState(issue, $event)"
-        >
-          <option value="open" :selected="'open' == issue.state">open</option>
-          <option value="pending" :selected="'pending' == issue.state">
-            pending
-          </option>
-          <option value="closed" :selected="'closed' == issue.state">
-            closed
-          </option>
-        </select> -->
+    <div class="flex flex-wrap">
+      <label class="w-full" :for="`issue-description-${issue.id}`"
+        >Description:
+      </label>
+      <textarea
+        :id="`issue-description-${issue.id}`"
+        type="text"
+        v-model="issueDescription"
+        rows="5"
+        class="text-black w-full flex resize-none rounded-lg"
+        @blur="updateIssue"
+      />
+    </div>
   </div>
 </template>
 
@@ -63,6 +64,8 @@ export default defineComponent({
   },
   setup(props) {
     const selectedState = ref(props.issue.state);
+    const issueTitle = ref(props.issue.title);
+    const issueDescription = ref(props.issue.description);
 
     // Helper function
     const canChangeState = (originalState: string, newState: string) => {
@@ -72,6 +75,13 @@ export default defineComponent({
       return (
         originalState == "open" ||
         (originalState == "pending" && newState == "closed")
+      );
+    };
+
+    const textHasChanged = () => {
+      return (
+        props.issue.title !== issueTitle.value ||
+        props.issue.description !== issueDescription.value
       );
     };
 
@@ -92,10 +102,26 @@ export default defineComponent({
       }
     };
 
+    const updateIssue = () => {
+      // Only update if title or description has been changed
+      if (textHasChanged()) {
+        const issue = { ...props.issue };
+        issue.title = issueTitle.value;
+        issue.description = issueDescription.value;
+
+        modifyIssue(issue);
+      }
+    };
+
     return {
       modifyIssue,
       updateIssueState,
+      updateIssue,
+
+      // Refs
       selectedState,
+      issueTitle,
+      issueDescription,
     };
   },
 });

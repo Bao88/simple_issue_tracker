@@ -32,11 +32,12 @@
         >
           {{ states[issueCompIndex] }}
         </div>
-        <div class="m-10 border-2">
+        <div class="m-10">
           <IssueComponent
             v-for="(issue, issueIndex) in issueComp.value"
             :issue="issue"
             :key="`${issue.id}-${issueIndex}`"
+            class="my-3 border-2"
           />
         </div>
       </div>
@@ -45,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import { ref, onMounted, defineComponent, computed } from "vue";
+import { ref, defineComponent, computed } from "vue";
 import { appStore } from "../store/store";
 
 // constants
@@ -53,7 +54,7 @@ const states = ["open", "pending", "closed"];
 
 // Components
 import IssueComponent from "./IssueComponent.vue";
-import { Issue, IssueState } from "@/store/models";
+import { IssueState } from "@/store/models";
 
 export default defineComponent({
   name: "IssueTrackerView",
@@ -80,83 +81,6 @@ export default defineComponent({
       appStore.getIssueWithState(IssueState.closed)
     );
 
-    // Check if the state of an issue can be changed.
-    // Open can be changed to either Pending or Closed
-    // Pending can be changed to Closed but not to Open
-    // Closed can't change state.
-    /* const canChangeState = (originalState: string, newState: string) => {
-      //Edge case if originalState == newState, it means we dont need to update state.
-      if (originalState == newState) return true;
-
-      return (
-        originalState == "open" ||
-        (originalState == "pending" && newState == "closed")
-      );
-    }; */
-
-    const fetchIssues = () => {
-      /* fetch(`${server}issues`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          issues.value = Object.values(data);
-        })
-        .catch(printError); */
-    };
-
-    // Update an issue
-    /* const updateIssue = (issue) => {
-      fetch(`${server}issue`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(issue),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-        })
-        .catch(printError);
-    }; */
-
-    /*  const updateIssueState = (
-      issue: { state: string },
-      event: HTMLSelectElement
-    ) => {
-      const state = event.target.value;
-      // Test if the state can be changed
-      if (canChangeState(issue.state, state)) {
-        // Modify the issue before sending
-        issue.state = state;
-        updateIssue(issue);
-      } else {
-        // Reset the selected value
-        event.target.value = issue.state;
-      }
-    }; */
-
-    // Helper functions for template
-    const isSameState = (columnIndex: number, issueState: string) => {
-      const columnState = states[columnIndex];
-      return columnState == issueState;
-    };
-
-    const getIssuesWithState = (columnIndex: number) => {
-      return issues.value.filter((issue: Issue) =>
-        isSameState(columnIndex, issue.state)
-      );
-    };
-
-    // Fetch isses when mounted
-    onMounted(() => {
-      fetchIssues();
-    });
-
     return {
       //constants
       states,
@@ -166,11 +90,6 @@ export default defineComponent({
       pendingIssues,
       closedIssues,
       computedIssues,
-      // Methods
-
-      /* updateIssueState, */
-      /*  updateIssue, */
-      getIssuesWithState,
     };
   },
 });

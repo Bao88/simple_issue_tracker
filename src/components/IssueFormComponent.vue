@@ -34,7 +34,7 @@
           v-model="selectedState"
           name="formSelect"
           id="formSelect"
-          class="rounded-full capitalize"
+          class="rounded-full capitalize text-black"
         >
           <option
             v-for="(state, stateIndex) in validStates"
@@ -51,7 +51,7 @@
         <textarea
           v-model="descriptionText"
           rows="4"
-          class="w-full rounded-sm h-3/6"
+          class="w-full rounded-sm h-3/6 text-black resize-none"
           id="formDescription"
           type="text"
           required
@@ -122,17 +122,4 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-input[type="text"],
-select,
-option {
-  color: black;
-  text-align: center;
-}
-
-textarea {
-  color: black;
-  resize: none;
-  height: 50%;
-}
-</style>
+<style scoped></style>

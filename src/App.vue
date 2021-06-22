@@ -1,14 +1,15 @@
 <template>
-  <div class="bg-green-400 w-screen h-screen text-white">
-    <!--  <div v-if="showFormOverlay">
-      <IssueFormComponent
-        @submitForm="closeIssueForm"
-        :isOverlay="true"
-        class="h-1/2 border-2"
-      />
-    </div> -->
+  <div class="w-screen h-screen text-white bg-green-100">
     <div
-      class="text-2xl font-bold flex justify-center items-center w-full"
+      class="
+        text-2xl
+        font-bold
+        flex
+        justify-center
+        items-center
+        w-full
+        text-gray-600
+      "
       style="height: 5%"
     >
       Simple Issue Tracker
@@ -105,5 +106,12 @@ body {
   background-position: center;
   background-size: 50% 2px, 2px 50%; /*thickness = 2px, length = 50% (25px)*/
   background-repeat: no-repeat;
+}
+
+input[type="text"],
+select,
+option {
+  color: black;
+  text-align: center;
 }
 </style>
