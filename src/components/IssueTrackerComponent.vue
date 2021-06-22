@@ -1,64 +1,20 @@
 <template>
-  <div class="issue-tracker-grid w-full border-4">
-    <button
-      id="create-issue-button"
-      class="create-issue-button md:hidden"
-      @click="createIssue"
-    >
-      Create issue
-    </button>
-
+  <div class="grid grid-cols-3 w-full">
     <div
       id="issue-tracker-grid"
-      v-for="columnIndex in 3"
+      v-for="(issueComp, issueCompIndex) in computedIssues"
       class="flex-container border"
-      :key="'issue column' + columnIndex"
+      :key="issueCompIndex"
     >
-      <div class="grid-column-header">{{ states[columnIndex - 1] }}</div>
-      <div
-        v-for="(issue, issueIndex) in getIssuesWithState(columnIndex - 1)"
-        :id="'column-' + columnIndex"
-        :key="`column-${columnIndex}-issue-${issueIndex}`"
-        class="issue"
-      >
-        <IssueComponent :issue="issue"></IssueComponent>
-        <!-- Add the issue if it is in the correct column and create unique id for each issue -->
-        <label :for="`issue-title-${columnIndex}-${issueIndex}`">Title: </label>
-        <!--  <input
-          :id="`issue-title${columnIndex}-${issueIndex}`"
-          type="text"
-          class="full-width"
-          v-model="issue.title"
-          @blur="updateIssue(issue)"
-        /> -->
+      <div class="m-7 border-2">
+        <div class="w-full text-lg text-center mt-2" style="height: 10%">
+          {{ states[issueCompIndex] }}
+        </div>
 
-        <label :for="`issue-state-${columnIndex}-${issueIndex}`"
-          >IssueState:
-        </label>
-        <!--  <select
-          name="state"
-          :id="`issue-state-${columnIndex}-${issueIndex}`"
-          @change="updateIssueState(issue, $event)"
-        >
-          <option value="open" :selected="'open' == issue.state">open</option>
-          <option value="pending" :selected="'pending' == issue.state">
-            pending
-          </option>
-          <option value="closed" :selected="'closed' == issue.state">
-            closed
-          </option>
-        </select> -->
-
-        <label
-          class="full-width"
-          :for="`issue-description-${columnIndex}-${issueIndex}`"
-          >Description:
-        </label>
-        <textarea
-          :id="`issue-description-${columnIndex}-${issueIndex}`"
-          type="text"
-          v-model="issue.description"
-          @blur="updateIssue(issue)"
+        <IssueComponent
+          v-for="(issue, issueIndex) in issueComp.value"
+          :issue="issue"
+          :key="`${issueCompIndex}-${issueIndex}`"
         />
       </div>
     </div>
@@ -66,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { ref, onMounted, defineComponent } from "vue";
+import { ref, onMounted, defineComponent, computed } from "vue";
 import { appStore } from "../store/store";
 
 // constants
@@ -74,7 +30,7 @@ const states = ["open", "pending", "closed"];
 
 // Components
 import IssueComponent from "./IssueComponent.vue";
-import { Issue } from "@/store/models";
+import { Issue, IssueState } from "@/store/models";
 
 export default defineComponent({
   name: "IssueTrackerView",
@@ -83,8 +39,23 @@ export default defineComponent({
     const issues = ref([]);
 
     // Methods
+    const computedIssues = [
+      computed(() => appStore.getIssueWithState(IssueState.open)),
+      computed(() => appStore.getIssueWithState(IssueState.pending)),
+      computed(() => appStore.getIssueWithState(IssueState.closed)),
+    ];
 
-    console.log(appStore);
+    const openIssues = computed(() =>
+      appStore.getIssueWithState(IssueState.open)
+    );
+
+    const pendingIssues = computed(() =>
+      appStore.getIssueWithState(IssueState.pending)
+    );
+
+    const closedIssues = computed(() =>
+      appStore.getIssueWithState(IssueState.closed)
+    );
 
     // Check if the state of an issue can be changed.
     // Open can be changed to either Pending or Closed
@@ -110,22 +81,6 @@ export default defineComponent({
         .then((response) => response.json())
         .then((data) => {
           issues.value = Object.values(data);
-        })
-        .catch(printError); */
-    };
-
-    // Create a new issue
-    const createIssue = () => {
-      /* fetch(`${server}issue`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          // Add to list
-          issues.value.push(data as never);
         })
         .catch(printError); */
     };
@@ -182,10 +137,14 @@ export default defineComponent({
     return {
       //constants
       states,
-      // ref
+      // computed and refs
       issues,
+      openIssues,
+      pendingIssues,
+      closedIssues,
+      computedIssues,
       // Methods
-      createIssue,
+
       /* updateIssueState, */
       /*  updateIssue, */
       getIssuesWithState,
@@ -195,13 +154,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.issue-tracker-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px 10px;
-  grid-auto-flow: row;
-}
-
 .flex-container {
   display: flex;
   flex-direction: column;

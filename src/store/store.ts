@@ -61,7 +61,6 @@ class AppStore extends Store<App> {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         if (Array.isArray(data)) {
           data.forEach((issue: IssueData) => {
             this.addIssue(new Issue(issue));
@@ -85,6 +84,21 @@ class AppStore extends Store<App> {
       .then((data: IssueData) => {
         const issue = new Issue(data);
         this.addIssue(issue);
+      })
+      .catch(printError);
+  }
+
+  updateIssue(issue: Issue) {
+    fetch(`${server}issue`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(issue),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
       })
       .catch(printError);
   }

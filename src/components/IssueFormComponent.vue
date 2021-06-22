@@ -14,11 +14,18 @@
         justify-center
       "
       @submit.prevent="submitIssue"
+      id="IssueForm"
     >
       <div class="w-full text-lg text-center mt-2">Create Issue</div>
       <div class="w-5/6">
         <label class="w-1/4 text-center" for="formTitle">Title: </label>
-        <input class="w-3/4 rounded-full" id="formTitle" type="text" required />
+        <input
+          v-model="titleText"
+          class="w-3/4 rounded-full"
+          id="formTitle"
+          type="text"
+          required
+        />
       </div>
 
       <div class="w-5/6">
@@ -42,6 +49,7 @@
       <div class="w-5/6">
         <label class="w-full" for="formDescription">Description: </label>
         <textarea
+          v-model="descriptionText"
           rows="4"
           class="w-full rounded-sm h-3/6"
           id="formDescription"
@@ -73,8 +81,17 @@ export default defineComponent({
     const titleText = ref("");
     const descriptionText = ref("");
 
+    const clearForm = () => {
+      titleText.value = "";
+      descriptionText.value = "";
+      selectedState.value = IssueState.open;
+    };
+
     //Method
     const submitIssue = () => {
+      let form = document.getElementById("IssueForm");
+      if (form) form = form as HTMLFormElement;
+
       const issue = new Issue({
         title: titleText.value,
         description: descriptionText.value,
@@ -83,6 +100,7 @@ export default defineComponent({
 
       if (issue) {
         appStore.createIssue(issue);
+        clearForm();
       } else {
         console.log("Issue is invalid");
       }
